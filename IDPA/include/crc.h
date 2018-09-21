@@ -19,14 +19,14 @@
 #include <stdint.h>
 
 template<typename T, size_t MSB>
-static T crc(T generator, const void *buf, size_t len)
+static T crc(T generator, const void *buffer, size_t length)
 {
-    const uint8_t *in = static_cast<const uint8_t *>(buf);
+    const uint8_t *input = static_cast<const uint8_t *>(buffer);
     T crc = 0;
 
-    for (size_t i = 0; i < len; i++)
+    for (size_t i = 0; i < length; i++)
     {
-        crc ^= static_cast<T>(in[i] << MSB);
+        crc ^= static_cast<T>(input[i] << MSB);
         for (uint8_t j = 0; j < 8; j++)
         {
             if (crc & (1 << (MSB + 7))) // Check if most significant bit is set
