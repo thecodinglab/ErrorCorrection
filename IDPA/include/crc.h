@@ -30,17 +30,17 @@ static T crc(T generator, const void *buffer, size_t length)
 
         for (uint8_t j = 0; j < 8; j++) // Repeat for 8 bits in current byte
         {
-			if (crc & (1 << (MSB + 7))) { // Check if most significant bit (MSB) is set
+            if (crc & (1 << (MSB + 7))) { // Check if most significant bit (MSB) is set
 
-				// If it is: Shift the crc one bit to the left to discard the MSB
-				// and XOR the crc with the polynomial (generator)
-				crc = (crc << 1) ^ generator;
-			}
-			else {
-				// If not shift the crc 1 bit to the left
-				crc <<= 1;
-			}
-                 
+                // If it is: Shift the crc one bit to the left to discard the MSB
+                // and XOR the crc with the polynomial (generator)
+                crc = (crc << 1) ^ generator;
+            }
+            else {
+                // If not shift the crc 1 bit to the left
+                crc <<= 1;
+            }
+
         }
     }
 
