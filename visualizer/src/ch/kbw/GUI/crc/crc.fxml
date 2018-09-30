@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.kbw.GUI.crc.CRCController">
+    <children>
+        <GridPane>
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="305.0" minWidth="10.0" prefWidth="90.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="447.0" minWidth="10.0" prefWidth="441.0" />
+                <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="445.0" minWidth="10.0" prefWidth="75.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Input:">
+                    <padding>
+                        <Insets right="10.0" />
+                    </padding>
+                </Label>
+                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Polynom:" GridPane.rowIndex="1">
+                    <padding>
+                        <Insets right="10.0" />
+                    </padding>
+                </Label>
+                <TextField fx:id="input" alignment="CENTER_RIGHT" GridPane.columnIndex="1" />
+                <TextField fx:id="polynom" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                    <children>
+                        <Button fx:id="run1" mnemonicParsing="false" onAction="#stepBackward" text="&lt;" />
+                        <Button fx:id="run" mnemonicParsing="false" onAction="#handleRun" text="run" />
+                        <Button mnemonicParsing="false" onAction="#stepForeward" text="&gt;" />
+                    </children>
+                    <padding>
+                        <Insets left="10.0" right="10.0" />
+                    </padding>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="10.0" top="10.0" />
+            </padding>
+        </GridPane>
+        <VBox fx:id="content" prefHeight="200.0" prefWidth="100.0" />
+    </children>
+</VBox>
