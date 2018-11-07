@@ -52,3 +52,38 @@ static uint16_t* hamming_16(const void *buffer, size_t length)
     return data;
 }
 
+#include <iostream>
+
+static uint16_t hamming_16_byte(uint8_t input)
+{
+	uint16_t message = input; // The final message with error correcting codes
+	const uint8_t countParityBits = 4; // The amount of parity bits in the final message
+
+	uint16_t parityIndex = 1; // The position of the currently used parity bit
+	while (parityIndex < (1 << countParityBits)) // Go through all parity bits and create spaces in the message for them
+	{
+		uint16_t upperMask = 0xffff << (parityIndex - 1);
+		message = ((message & upperMask) << 1) | (message & ~upperMask); // Shift all bits above the parity bit one to the left
+																		 // (create space for parity bit)
+		parityIndex <<= 1; // Go to the next parity bit
+	}
+
+	message = message & 0x7fff; // TODO DEBUG ONLY
+	parityIndex >>= 1;
+
+	while (parityIndex)
+	{
+		size_t val = 0;
+		for (size_t i = 0; i < 15; i++)
+		{
+			if ((i + 1) & parityIndex)
+				val ^= 0x1 & (message >> i);
+		}
+
+		message |= val << (parityIndex - 1);
+		
+		parityIndex >>= 1;
+	}
+
+	return message;
+}
