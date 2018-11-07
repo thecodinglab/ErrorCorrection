@@ -1,14 +1,18 @@
 <template>
   <illustration>
-    <div v-for="row in rows" class="row">
-      <p>{{ row.data }}<span class="append">{{ row.append }}</span></p>
-      <div class="flex">
-        <p v-html="getIndents(row.indents)"></p>
-        <div>
+    <div v-for="(row, i) in rows" class="flex row">
+      <p v-html="getIndents(row.indents)" class="indent"></p>
+      <div>
+        <p>{{ row.data }}<span class="append">{{ row.append }}</span></p>
+        <div class="flex">
+          <p v-html="getIndents(row.indent)"></p>
           <p class="polynomial">{{ polynomial }}</p>
-          <p>{{ row.solution }}</p>
         </div>
       </div>
+    </div>
+    <div class="flex">
+      <p v-html="getIndents(indents)" class="indent"></p>
+      <p>{{ result }}</p>
     </div>
   </illustration>
 </template>
@@ -23,7 +27,8 @@
     data() {
       return {
         polynomial: '100011101',
-        indents: 0
+        indents: 0,
+        result: ''
       }
     },
     computed: {
@@ -31,62 +36,58 @@
         const rows = [];
         const polynomial = this.polynomial;
 
-        let data = '01011011'; // TODO: Set to this.bits
+        let data = '10111001'; // TODO: Set to this.bits
+        let normalized = '';
         let append = '';
+        let indents = 0;
+        const length = data.length + polynomial.length;
 
         // First time add as many 0s as there are bits in polynomial
         for (let i = 0; i < polynomial.length; i++) {
           append += '0';
         }
 
-        let normalized = data.substring(data.indexOf('1'), data.length) + append;
-        const solution = this.XOR(polynomial, normalized);
-        rows.push({data, append, indents: 0, solution});
+        rows.push({data, append, indent: data.indexOf('1'), indents});
 
-        // Repeat for as long as there are appending 0s left
-        while (append.length) {
-
-          let indents;
-          for (let i = 0; i < data.indexOf('1'); i++) {
-            indents++;
-            this.indents++;
-          }
-
-          // Append 0s to fit polynomial length
+        while (polynomial.length < (length - indents)) {
           append = '';
-          for (let i = 0; i < polynomial.length - data.length; i++) {
+          for (let i = 0; i < polynomial.length - (data.length - data.indexOf('1')); i++) {
             append += '0';
           }
 
           // XOR
-          let normalized = data.substring(data.indexOf('1'), data.length) + append;
-          const solution = this.XOR(polynomial, normalized);
+          normalized = data.substring(data.indexOf('1')) + append;
+          data = '';
+          for (let i = 0; i < polynomial.length; i++) {
+            data += parseInt(polynomial.charAt(i)) ^ parseInt(normalized.charAt(i))
+          }
 
-          rows.push({data, append, indents, solution});
-          data = solution;
+          const indent = data.indexOf('1');
+
+          const row = {data, normalized, append, indent, indents};
+          console.log(row)
+
+          indents += indent;
+
+          rows.push(row);
         }
+
+        this.indents = indents;
+        this.result = data;
 
         return rows;
       }
     },
     methods: {
-      XOR(polynomial, normalized) {
-        let solution = '';
-        for (let i = 0; i < polynomial.length; i++) {
-          const p = polynomial.charAt(i) === '1';
-          const n = normalized.charAt(i) === '1';
-          const bool = (p && !n) || (!p && n);
-          solution += bool ? '1' : '0';
-        }
-        return solution;
-      },
       getIndents(range) {
         let indents = '';
         for (let i = 0; i < range; i++) {
           indents += '&nbsp;';
         }
-        console.log(indents)
         return indents;
+      },
+      last(i) {
+        return i < this.rows.length-1;
       }
     }
   }
@@ -113,12 +114,12 @@
       color: $blue;
       border-bottom: 2px solid $light-gray;
       width: max-content;
-      margin-bottom: 4px
     }
 
-    .flex {
-      display: flex;
-    }
+  }
+
+  .flex {
+    display: flex;
   }
 
 </style>
