@@ -1,18 +1,19 @@
 <template>
   <illustration>
     <div v-for="(row, i) in rows" class="flex row">
-      <p v-html="getIndents(row.indents)" class="indent"></p>
+      <p v-html="getIndents(row.indents)"></p>
       <div>
-        <p>{{ row.data }}<span class="append">{{ row.append }}</span></p>
+        <p v-if="i === 0">{{ row.data }}<span class="append">{{ appending }}</span></p>
+        <p v-else>{{ row.data }}<span class="append">{{ row.append }}</span></p>
         <div class="flex">
           <p v-html="getIndents(row.indent)"></p>
           <p class="polynomial">{{ polynomial }}</p>
         </div>
       </div>
     </div>
-    <div class="flex">
-      <p v-html="getIndents(indents)" class="indent"></p>
-      <p>{{ result }}</p>
+    <div class="flex row">
+      <p v-html="getIndents(indents)"></p>
+      <p><span class="append">{{ result.prepend }}</span>{{ result.data }}</p>
     </div>
   </illustration>
 </template>
@@ -27,8 +28,7 @@
     data() {
       return {
         polynomial: '100011101',
-        indents: 0,
-        result: ''
+        solution: ''
       }
     },
     computed: {
@@ -36,46 +36,55 @@
         const rows = [];
         const polynomial = this.polynomial;
 
-        let data = '10111001'; // TODO: Set to this.bits
-        let normalized = '';
-        let append = '';
+        let data = '10011001'; // TODO: Set to this.bits
         let indents = 0;
-        const length = data.length + polynomial.length;
+        let length = data.length + polynomial.length - 1;
 
-        // First time add as many 0s as there are bits in polynomial
-        for (let i = 0; i < polynomial.length; i++) {
-          append += '0';
-        }
+        while (true) {
+          const indent = data.indexOf('1');
 
-        rows.push({data, append, indent: data.indexOf('1'), indents});
-
-        while (polynomial.length < (length - indents)) {
-          append = '';
-          for (let i = 0; i < polynomial.length - (data.length - data.indexOf('1')); i++) {
+          let append = '';
+          for (let i = 0; i < polynomial.length - (data.length - indent); i++) {
             append += '0';
           }
 
-          // XOR
-          normalized = data.substring(data.indexOf('1')) + append;
-          data = '';
-          for (let i = 0; i < polynomial.length; i++) {
-            data += parseInt(polynomial.charAt(i)) ^ parseInt(normalized.charAt(i))
-          }
-
-          const indent = data.indexOf('1');
-
-          const row = {data, normalized, append, indent, indents};
-          console.log(row)
-
+          rows.push({data, append, indent, indents});
           indents += indent;
 
-          rows.push(row);
+          // XOR
+          const normalized = data.substring(indent) + append;
+          data = '';
+          for (let i = 0; i < polynomial.length; i++) {
+            data += parseInt(polynomial.charAt(i)) ^ parseInt(normalized.charAt(i));
+          }
+
+          if (indents + polynomial.length >= length) {
+            this.solution = data;
+            break;
+          }
         }
 
-        this.indents = indents;
-        this.result = data;
-
         return rows;
+      },
+      indents() {
+        const row = this.rows[this.rows.length-1];
+        return row.indents + row.indent;
+      },
+      result() {
+        const p = this.solution.length - (this.polynomial.length - 1);
+        let prepend = '';
+        for (let i = 0; i < p; i++) prepend += '0'
+        return {
+          data: this.solution.substring(p),
+          prepend
+        }
+      },
+      appending() {
+        let append = '';
+        for (let i = 0; i < this.polynomial.length - 1; i++) {
+          append += '0';
+        }
+        return append;
       }
     },
     methods: {
@@ -85,9 +94,6 @@
           indents += '&nbsp;';
         }
         return indents;
-      },
-      last(i) {
-        return i < this.rows.length-1;
       }
     }
   }
@@ -106,16 +112,16 @@
 
     }
 
-    .append {
-      color: $light-gray;
-    }
-
     .polynomial {
       color: $blue;
       border-bottom: 2px solid $light-gray;
       width: max-content;
     }
 
+  }
+
+  .append {
+    color: $light-gray;
   }
 
   .flex {
