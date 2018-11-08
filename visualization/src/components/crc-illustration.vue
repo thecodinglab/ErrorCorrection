@@ -1,5 +1,8 @@
 <template>
   <illustration>
+    <button @click="play">Play</button>
+    <button @click="tick">Tick</button>
+    <button @click="playback.step = 0">Clear</button>
     <div v-for="(row, i) in rows" class="flex row">
       <p v-html="getIndents(row.indents)"></p>
       <div>
@@ -7,7 +10,9 @@
         <p v-else>{{ row.data }}<span class="append">{{ row.append }}</span></p>
         <div class="flex">
           <p v-html="getIndents(row.indent)"></p>
-          <p class="polynomial">{{ polynomial }}</p>
+          <tooltip tooltip="Polynomial">
+            <p class="polynomial">{{ polynomial }}</p>
+          </tooltip>
         </div>
       </div>
     </div>
@@ -20,16 +25,23 @@
 
 <script>
   import Illustration from "../layouts/illustration";
+  import Tooltip from "./tooltip";
 
   export default {
     name: "crc-illustration",
-    components: {Illustration},
+    components: {Tooltip, Illustration},
     props: ['bits'],
     data() {
       return {
         polynomial: '110101',
         solution: '',
-        indents: 0
+        indents: 0,
+        playback: {
+          running: false,
+          speed: 1000,
+          interval: null,
+          step: 0
+        }
       }
     },
     computed: {
@@ -37,7 +49,7 @@
         const rows = [];
         const polynomial = this.polynomial;
 
-        let data = '11011'; // TODO: Set to this.bits
+        let data = '100111010101010101010101010101'; // TODO: Set to this.bits
         let indents = 0;
         let length = data.length + polynomial.length - 1;
 
@@ -77,17 +89,6 @@
 
         return rows;
       },
-      /*result() {
-        const p = this.solution.length - (this.polynomial.length - 1);
-        let prepend = '';
-        for (let i = 0; i < p; i++) prepend += '0'
-        let append = '';
-        return {
-          data: this.solution.substring(p),
-          prepend,
-          append
-        }
-      },*/
       appending() {
         let append = '';
         for (let i = 0; i < this.polynomial.length - 1; i++) {
@@ -104,6 +105,18 @@
       },
       getIndents(range) {
         return this.fill('&nbsp;', range)
+      },
+      play() {
+        let playback = this.playback;
+        if (playback.running = !playback.running) {
+          playback.interval = setInterval(this.tick, playback.speed);
+        } else {
+          clearInterval(playback.interval);
+        }
+        console.log(playback.running)
+      },
+      tick() {
+        this.playback.step++;
       }
     }
   }
