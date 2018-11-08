@@ -13,7 +13,7 @@
     </div>
     <div class="flex row">
       <p v-html="getIndents(indents)"></p>
-      <p><span class="append">{{ result.prepend }}</span>{{ result.data }}</p>
+      <p class="solution"><span class="append">{{ solution.prepend }}</span>{{ solution.data }}{{ solution.append }}</p>
     </div>
   </illustration>
 </template>
@@ -27,8 +27,9 @@
     props: ['bits'],
     data() {
       return {
-        polynomial: '100011101',
-        solution: ''
+        polynomial: '110101',
+        solution: '',
+        indents: 0
       }
     },
     computed: {
@@ -36,7 +37,7 @@
         const rows = [];
         const polynomial = this.polynomial;
 
-        let data = '10011001'; // TODO: Set to this.bits
+        let data = '11011'; // TODO: Set to this.bits
         let indents = 0;
         let length = data.length + polynomial.length - 1;
 
@@ -58,27 +59,35 @@
             data += parseInt(polynomial.charAt(i)) ^ parseInt(normalized.charAt(i));
           }
 
-          if (indents + polynomial.length >= length) {
-            this.solution = data;
+          console.log(indents + ' + ' + polynomial.length + ' >= ' + length)
+          if ((indents + 1) + polynomial.length >= length) {
+            const prepend = this.fill('0', length - (indents + polynomial.length - 1));
+            const d = data.substring(prepend.length);
+            const append = this.fill('0', (polynomial.length - 1) - d.length)
+
+            this.solution = {
+              data: d,
+              prepend,
+              append
+            };
+            this.indents = indents;
             break;
           }
         }
 
         return rows;
       },
-      indents() {
-        const row = this.rows[this.rows.length-1];
-        return row.indents + row.indent;
-      },
-      result() {
+      /*result() {
         const p = this.solution.length - (this.polynomial.length - 1);
         let prepend = '';
         for (let i = 0; i < p; i++) prepend += '0'
+        let append = '';
         return {
           data: this.solution.substring(p),
-          prepend
+          prepend,
+          append
         }
-      },
+      },*/
       appending() {
         let append = '';
         for (let i = 0; i < this.polynomial.length - 1; i++) {
@@ -88,12 +97,13 @@
       }
     },
     methods: {
+      fill(string, range) {
+        let zeroes = '';
+        for (let i = 0; i < range; i++) zeroes += string;
+        return zeroes;
+      },
       getIndents(range) {
-        let indents = '';
-        for (let i = 0; i < range; i++) {
-          indents += '&nbsp;';
-        }
-        return indents;
+        return this.fill('&nbsp;', range)
       }
     }
   }
@@ -118,6 +128,10 @@
       width: max-content;
     }
 
+  }
+
+  .solution {
+    
   }
 
   .append {
