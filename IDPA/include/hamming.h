@@ -54,7 +54,7 @@ static uint16_t* hamming_16(const void *buffer, size_t length)
 
 #include <iostream>
 
-static uint16_t hamming_16_byte(uint8_t input)
+static uint16_t hamming_16_byte(uint16_t input) // Sorry, had to make it 16 bit for benchmark
 {
 	uint16_t message = input; // The final message with error correcting codes
 	const uint8_t countParityBits = 4; // The amount of parity bits in the final message
@@ -123,6 +123,10 @@ static uint16_t hamming_15_4_performance(uint16_t data) {
     uint16_t p4 = 1 & ((r4 & 1) ^ ((r4 >> 1) & 1) ^ ((r4 >> 2) & 1) ^ ((r4 >> 3) & 1) ^ ((r4 >> 4) & 1) ^ ((r4 >> 5) & 1) ^ ((r4 >> 6) & 1) ^ ((r4 >> 7) & 1) ^ ((r4 >> 8) & 1) ^ ((r4 >> 9) & 1) ^ ((r4 >> 10) & 1) ^ ((r4 >> 11) & 1) ^ ((r4 >> 12) & 1) ^ ((r4 >> 13) & 1) ^ ((r4 >> 14) & 1));
 
     return data ^ (p1 << 3) ^ (p2 << 2) ^ (p3 << 1) ^ p4;
+}
+
+static uint16_t hamming_15_4_oneliner(uint16_t data) {
+	return data ^ ((1 & (((data & 0x6D58) & 1) ^ (((data & 0x6D58) >> 1) & 1) ^ (((data & 0x6D58) >> 2) & 1) ^ (((data & 0x6D58) >> 3) & 1) ^ (((data & 0x6D58) >> 4) & 1) ^ (((data & 0x6D58) >> 5) & 1) ^ (((data & 0x6D58) >> 6) & 1) ^ (((data & 0x6D58) >> 7) & 1) ^ (((data & 0x6D58) >> 8) & 1) ^ (((data & 0x6D58) >> 9) & 1) ^ (((data & 0x6D58) >> 10) & 1) ^ (((data & 0x6D58) >> 11) & 1) ^ (((data & 0x6D58) >> 12) & 1) ^ (((data & 0x6D58) >> 13) & 1) ^ (((data & 0x6D58) >> 14) & 1))) << 3) ^ ((1 & (((data & 0x5B34) & 1) ^ (((data & 0x5B34) >> 1) & 1) ^ (((data & 0x5B34) >> 2) & 1) ^ (((data & 0x5B34) >> 3) & 1) ^ (((data & 0x5B34) >> 4) & 1) ^ (((data & 0x5B34) >> 5) & 1) ^ (((data & 0x5B34) >> 6) & 1) ^ (((data & 0x5B34) >> 7) & 1) ^ (((data & 0x5B34) >> 8) & 1) ^ (((data & 0x5B34) >> 9) & 1) ^ (((data & 0x5B34) >> 10) & 1) ^ (((data & 0x5B34) >> 11) & 1) ^ (((data & 0x5B34) >> 12) & 1) ^ (((data & 0x5B34) >> 13) & 1) ^ (((data & 0x5B34) >> 14) & 1))) << 2) ^ ((1 & (((data & 0x38F2) & 1) ^ (((data & 0x38F2) >> 1) & 1) ^ (((data & 0x38F2) >> 2) & 1) ^ (((data & 0x38F2) >> 3) & 1) ^ (((data & 0x38F2) >> 4) & 1) ^ (((data & 0x38F2) >> 5) & 1) ^ (((data & 0x38F2) >> 6) & 1) ^ (((data & 0x38F2) >> 7) & 1) ^ (((data & 0x38F2) >> 8) & 1) ^ (((data & 0x38F2) >> 9) & 1) ^ (((data & 0x38F2) >> 10) & 1) ^ (((data & 0x38F2) >> 11) & 1) ^ (((data & 0x38F2) >> 12) & 1) ^ (((data & 0x38F2) >> 13) & 1) ^ (((data & 0x38F2) >> 14) & 1))) << 1) ^ (1 & (((data & 0x7F1) & 1) ^ (((data & 0x7F1) >> 1) & 1) ^ (((data & 0x7F1) >> 2) & 1) ^ (((data & 0x7F1) >> 3) & 1) ^ (((data & 0x7F1) >> 4) & 1) ^ (((data & 0x7F1) >> 5) & 1) ^ (((data & 0x7F1) >> 6) & 1) ^ (((data & 0x7F1) >> 7) & 1) ^ (((data & 0x7F1) >> 8) & 1) ^ (((data & 0x7F1) >> 9) & 1) ^ (((data & 0x7F1) >> 10) & 1) ^ (((data & 0x7F1) >> 11) & 1) ^ (((data & 0x7F1) >> 12) & 1) ^ (((data & 0x7F1) >> 13) & 1) ^ (((data & 0x7F1) >> 14) & 1)));
 }
 
 /*

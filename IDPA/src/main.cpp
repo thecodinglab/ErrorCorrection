@@ -26,67 +26,21 @@ uint32_t Compute_CRC32_Simple(const uint8_t *bytes, size_t length)
 }
 
 #include <chrono>
-
 #define COUNT 10000000
 
-void benchmarkPhilip()
+void benchmark(uint16_t (*algorithm)(uint16_t), const char * msg)
 {
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
 	for (size_t i = 0; i < COUNT; i++)
 	{
-		hamming_16(&i, 1);
+		algorithm(i);
 	}
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
 	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-	std::cout << "Took " << ms.count() << "ms for Philip's algorithm" << std::endl;
-}
-
-void benchmarkFlorian()
-{
-	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-
-	for (size_t i = 0; i < COUNT; i++)
-	{
-		hamming_16_byte(i);
-	}
-
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-
-	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-	std::cout << "Took " << ms.count() << "ms for Florian's algorithm" << std::endl;
-}
-
-void benchmarkMatrix()
-{
-    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-
-    for (size_t i = 0; i < COUNT; i++)
-    {
-        hamming_15_4(i);
-    }
-
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-
-    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Took " << ms.count() << "ms for Matrix's algorithm" << std::endl;
-}
-
-void benchmarkMatrixHardCode()
-{
-    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-
-    for (size_t i = 0; i < COUNT; i++)
-    {
-        hamming_15_4_performance(i);
-    }
-
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-
-    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Took " << ms.count() << "ms for Matrix using the power of useless hardcoding" << std::endl;
+	std::cout << "Took " << ms.count() << "ms for " << msg << std::endl;
 }
 
 int main()
@@ -98,12 +52,13 @@ int main()
     //std::cout << std::hex << crc<uint32_t, 24>(0x04C11DB7, string, strlen(string)) << std::endl;
 
 
-	benchmarkPhilip();
-	benchmarkFlorian();
-    benchmarkMatrix();
-    benchmarkMatrixHardCode();
+	//benchmark(&hamming_16); // Philip
+	benchmark(&hamming_16_byte, "Florian's algorithm"); // Florian
+	benchmark(&hamming_15_4, "Matrix"); // Matrix
+	benchmark(&hamming_15_4_performance, "Matrix without for loop");
+	benchmark(&hamming_15_4_oneliner, "amazing oneliner");
 
-    std::cout << std::bitset<16>(hamming_15_4_performance(0x4E20)) << std::endl;
+    //std::cout << std::bitset<16>(hamming_15_4_performance(0x4E20)) << std::endl;
 
     /*uint16_t data = 0x4E20;
     uint16_t result = hamming_15_4(data);
