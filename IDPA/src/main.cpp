@@ -57,6 +57,7 @@ int main()
 	benchmark(&hamming_15_4, "Matrix"); // Matrix
 	benchmark(&hamming_15_4_performance, "Matrix without for loop");
 	benchmark(&hamming_15_4_oneliner, "amazing oneliner");
+    benchmark(&hamming_matrix_asm, "matrix using assembly");
 
     //std::cout << std::bitset<16>(hamming_15_4_performance(0x4E20)) << std::endl;
 
