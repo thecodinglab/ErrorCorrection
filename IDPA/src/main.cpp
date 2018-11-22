@@ -59,18 +59,58 @@ void benchmarkFlorian()
 	std::cout << "Took " << ms.count() << "ms for Florian's algorithm" << std::endl;
 }
 
+void benchmarkMatrix()
+{
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+
+    for (size_t i = 0; i < COUNT; i++)
+    {
+        hamming_15_4(i);
+    }
+
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Took " << ms.count() << "ms for Matrix's algorithm" << std::endl;
+}
+
+void benchmarkMatrixHardCode()
+{
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+
+    for (size_t i = 0; i < COUNT; i++)
+    {
+        hamming_15_4_performance(i);
+    }
+
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Took " << ms.count() << "ms for Matrix using the power of useless hardcoding" << std::endl;
+}
+
 int main()
 {
     const char *string = "The quick brown fox jumps over the lazy dog";
 
     // CRC
-    /*std::cout << std::hex << Compute_CRC32_Simple((uint8_t*)string, strlen(string)) << std::endl;
-    std::cout << std::hex << crc<uint32_t, 24>(0x04C11DB7, string, strlen(string)) << std::endl;*/
+    //std::cout << std::hex << Compute_CRC32_Simple((uint8_t*)string, strlen(string)) << std::endl;
+    //std::cout << std::hex << crc<uint32_t, 24>(0x04C11DB7, string, strlen(string)) << std::endl;
 
-	uint8_t data = 0xff;
 
 	benchmarkPhilip();
 	benchmarkFlorian();
+    benchmarkMatrix();
+    benchmarkMatrixHardCode();
+
+    std::cout << std::bitset<16>(hamming_15_4_performance(0x4E20)) << std::endl;
+
+    /*uint16_t data = 0x4E20;
+    uint16_t result = hamming_15_4(data);
+
+    std::cout << std::bitset<16>(result) << "< solution" << std::endl;
+    std::cout << std::bitset<16>(hamming_15_4(result)) << "< check" << std::endl;
+    */
 
     // Hamming-Code
     // 1st letter: "T", UTF-8-code 84 = 1010100
