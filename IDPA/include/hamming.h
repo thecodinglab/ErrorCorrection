@@ -159,27 +159,27 @@ uint16_t hamming_matrix_asm(uint16_t in)
         and cx, MATRIX_ROW_1    // Perform the binary matrix multiplication with the first row (0*0=0, 0*1=0, 1*0=0, 1*1=1 => logical and)
         popcnt cx, cx           // Summing up (calculate Hamming Weight [amount of set bits in the register])
         and cx, 1               // Update register to a bit value whether the amount of set bits is even
-        or ax, cx              // Move the result into the return register
+        or ax, cx               // Move the result into the return register
         shl ax, 1               // Shift return value by one and start calculation of next value
 
         mov cx, in              // Move input variable into cx (16-bit) register
         and cx, MATRIX_ROW_2    // Perform the binary matrix multiplication with the second row
         popcnt cx, cx           // Calculate hamming weight
         and cx, 1               // Update register to a bit value whether the amount of set bits is even
-        or ax, cx              // Move the result into the return register
+        or ax, cx               // Move the result into the return register
         shl ax, 1               // Shift return value by one and start calculation of next value
 
         mov cx, in              // Move input variable into cx (16-bit) register
         and cx, MATRIX_ROW_3    // Perform the binary matrix multiplication with the third row
         popcnt cx, cx           // Calculate hamming weight
         and cx, 1               // Update register to a bit value whether the amount of set bits is even
-        or ax, cx              // Move the result into the return register
+        or ax, cx               // Move the result into the return register
         shl ax, 1               // Shift return value by one and start calculation of next value
 
         mov cx, in              // Move input variable into cx (16-bit) register
         and cx, MATRIX_ROW_4    // Perform the binary matrix multiplication with the fourth row
         popcnt cx, cx           // Calculate hamming weight
         and cx, 1               // Update register to a bit value whether the amount of set bits is even
-        or ax, cx              // Move the result into the return register
+        or ax, cx               // Move the result into the return register
     }
 }
