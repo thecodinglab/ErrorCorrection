@@ -18,10 +18,35 @@
 
 #include <stdint.h>
 
-#define MATRIX_ROW_1 0x7F80 /* 111111110000000 */
-#define MATRIX_ROW_2 0x7878 /* 111100001111000 */
-#define MATRIX_ROW_3 0x6666 /* 110011001100110 */
-#define MATRIX_ROW_4 0x5555 /* 101010101010101 */
+#define MATRIX_ROW_1 0x7F80 /* 000011111111000 */
+#define MATRIX_ROW_2 0x7878 /* 011100011110100 */
+#define MATRIX_ROW_3 0x6666 /* 101101100110010 */
+#define MATRIX_ROW_4 0x5555 /* 110110101010001 */
+
+#define GENERATOR_MATRIX_ROW_1 0x07F8 /* 000011111111000 */
+#define GENERATOR_MATRIX_ROW_2 0x38F4 /* 011100011110100 */
+#define GENERATOR_MATRIX_ROW_3 0x5B32 /* 101101100110010 */
+#define GENERATOR_MATRIX_ROW_4 0x6D51 /* 110110101010001 */
+
+#define CHECK_MATRIX_ROW_1 0x00FF /* 000000011111111 */
+#define CHECK_MATRIX_ROW_2 0x0F0F /* 000111100001111 */
+#define CHECK_MATRIX_ROW_3 0x3333 /* 011001100110011 */
+#define CHECK_MATRIX_ROW_4 0x5555 /* 101010101010101 */
+
+// #define GENERATOR_MATRIX_ROW_1 0x7F80 /* 111111110000000 */
+// #define GENERATOR_MATRIX_ROW_2 0x7878 /* 111100001111000 */
+// #define GENERATOR_MATRIX_ROW_3 0x6666 /* 110011001100110 */
+// #define GENERATOR_MATRIX_ROW_4 0x5555 /* 101010101010101 */
+
+// #define MATRIX_ROW_1 0x5C78 /* 101110001111000 */
+// #define MATRIX_ROW_2 0x6D94 /* 110110110010100 */
+// #define MATRIX_ROW_3 0x76C2 /* 111011011000010 */
+// #define MATRIX_ROW_4 0x7B21 /* 111101100100001 */
+
+// #define MATRIX_ROW_1 0x7B21 /* 101110001111000 */
+// #define MATRIX_ROW_2 0x76C2 /* 110110110010100 */
+// #define MATRIX_ROW_3 0x6D94 /* 111011011000010 */
+// #define MATRIX_ROW_4 0x5C78 /* 111101100100001 */
 
 //template<typename T>
 static uint16_t* hamming_16(const void *buffer, size_t length)
@@ -134,36 +159,70 @@ static uint16_t hamming_15_4_oneliner(uint16_t data) {
 	return data ^ ((1 & (((data & 0x6D58) & 1) ^ (((data & 0x6D58) >> 1) & 1) ^ (((data & 0x6D58) >> 2) & 1) ^ (((data & 0x6D58) >> 3) & 1) ^ (((data & 0x6D58) >> 4) & 1) ^ (((data & 0x6D58) >> 5) & 1) ^ (((data & 0x6D58) >> 6) & 1) ^ (((data & 0x6D58) >> 7) & 1) ^ (((data & 0x6D58) >> 8) & 1) ^ (((data & 0x6D58) >> 9) & 1) ^ (((data & 0x6D58) >> 10) & 1) ^ (((data & 0x6D58) >> 11) & 1) ^ (((data & 0x6D58) >> 12) & 1) ^ (((data & 0x6D58) >> 13) & 1) ^ (((data & 0x6D58) >> 14) & 1))) << 3) ^ ((1 & (((data & 0x5B34) & 1) ^ (((data & 0x5B34) >> 1) & 1) ^ (((data & 0x5B34) >> 2) & 1) ^ (((data & 0x5B34) >> 3) & 1) ^ (((data & 0x5B34) >> 4) & 1) ^ (((data & 0x5B34) >> 5) & 1) ^ (((data & 0x5B34) >> 6) & 1) ^ (((data & 0x5B34) >> 7) & 1) ^ (((data & 0x5B34) >> 8) & 1) ^ (((data & 0x5B34) >> 9) & 1) ^ (((data & 0x5B34) >> 10) & 1) ^ (((data & 0x5B34) >> 11) & 1) ^ (((data & 0x5B34) >> 12) & 1) ^ (((data & 0x5B34) >> 13) & 1) ^ (((data & 0x5B34) >> 14) & 1))) << 2) ^ ((1 & (((data & 0x38F2) & 1) ^ (((data & 0x38F2) >> 1) & 1) ^ (((data & 0x38F2) >> 2) & 1) ^ (((data & 0x38F2) >> 3) & 1) ^ (((data & 0x38F2) >> 4) & 1) ^ (((data & 0x38F2) >> 5) & 1) ^ (((data & 0x38F2) >> 6) & 1) ^ (((data & 0x38F2) >> 7) & 1) ^ (((data & 0x38F2) >> 8) & 1) ^ (((data & 0x38F2) >> 9) & 1) ^ (((data & 0x38F2) >> 10) & 1) ^ (((data & 0x38F2) >> 11) & 1) ^ (((data & 0x38F2) >> 12) & 1) ^ (((data & 0x38F2) >> 13) & 1) ^ (((data & 0x38F2) >> 14) & 1))) << 1) ^ (1 & (((data & 0x7F1) & 1) ^ (((data & 0x7F1) >> 1) & 1) ^ (((data & 0x7F1) >> 2) & 1) ^ (((data & 0x7F1) >> 3) & 1) ^ (((data & 0x7F1) >> 4) & 1) ^ (((data & 0x7F1) >> 5) & 1) ^ (((data & 0x7F1) >> 6) & 1) ^ (((data & 0x7F1) >> 7) & 1) ^ (((data & 0x7F1) >> 8) & 1) ^ (((data & 0x7F1) >> 9) & 1) ^ (((data & 0x7F1) >> 10) & 1) ^ (((data & 0x7F1) >> 11) & 1) ^ (((data & 0x7F1) >> 12) & 1) ^ (((data & 0x7F1) >> 13) & 1) ^ (((data & 0x7F1) >> 14) & 1)));
 }
 
-uint16_t hamming_matrix_asm(uint16_t in)
+uint16_t hamming_matrix_asm_generate(uint16_t in)
 {
     __asm {
         mov ax, 0
 
         mov cx, in              // Move input variable into cx (16-bit) register
-        and cx, MATRIX_ROW_1    // Perform the binary matrix multiplication with the first row (0*0=0, 0*1=0, 1*0=0, 1*1=1 => logical and)
+        and cx, GENERATOR_MATRIX_ROW_1    // Perform the binary matrix multiplication with the first row (0*0=0, 0*1=0, 1*0=0, 1*1=1 => logical and)
         popcnt cx, cx           // Summing up (calculate Hamming Weight [amount of set bits in the register])
         and cx, 1               // Update register to a bit value whether the amount of set bits is even
         or ax, cx               // Move the result into the return register
         shl ax, 1               // Shift return value by one and start calculation of next value
 
         mov cx, in              // Move input variable into cx (16-bit) register
-        and cx, MATRIX_ROW_2    // Perform the binary matrix multiplication with the second row
+        and cx, GENERATOR_MATRIX_ROW_2    // Perform the binary matrix multiplication with the second row
         popcnt cx, cx           // Calculate hamming weight
         and cx, 1               // Update register to a bit value whether the amount of set bits is even
         or ax, cx               // Move the result into the return register
         shl ax, 1               // Shift return value by one and start calculation of next value
 
         mov cx, in              // Move input variable into cx (16-bit) register
-        and cx, MATRIX_ROW_3    // Perform the binary matrix multiplication with the third row
+        and cx, GENERATOR_MATRIX_ROW_3    // Perform the binary matrix multiplication with the third row
         popcnt cx, cx           // Calculate hamming weight
         and cx, 1               // Update register to a bit value whether the amount of set bits is even
         or ax, cx               // Move the result into the return register
         shl ax, 1               // Shift return value by one and start calculation of next value
 
         mov cx, in              // Move input variable into cx (16-bit) register
-        and cx, MATRIX_ROW_4    // Perform the binary matrix multiplication with the fourth row
+        and cx, GENERATOR_MATRIX_ROW_4    // Perform the binary matrix multiplication with the fourth row
         popcnt cx, cx           // Calculate hamming weight
         and cx, 1               // Update register to a bit value whether the amount of set bits is even
         or ax, cx               // Move the result into the return register
     }
+}
+
+uint16_t hamming_matrix_asm_check(uint16_t in)
+{
+	__asm {
+		mov ax, 0
+
+		mov cx, in              // Move input variable into cx (16-bit) register
+		and cx, CHECK_MATRIX_ROW_1    // Perform the binary matrix multiplication with the first row (0*0=0, 0*1=0, 1*0=0, 1*1=1 => logical and)
+		popcnt cx, cx           // Summing up (calculate Hamming Weight [amount of set bits in the register])
+		and cx, 1               // Update register to a bit value whether the amount of set bits is even
+		or ax, cx               // Move the result into the return register
+		shl ax, 1               // Shift return value by one and start calculation of next value
+
+		mov cx, in              // Move input variable into cx (16-bit) register
+		and cx, CHECK_MATRIX_ROW_2    // Perform the binary matrix multiplication with the second row
+		popcnt cx, cx           // Calculate hamming weight
+		and cx, 1               // Update register to a bit value whether the amount of set bits is even
+		or ax, cx               // Move the result into the return register
+		shl ax, 1               // Shift return value by one and start calculation of next value
+
+		mov cx, in              // Move input variable into cx (16-bit) register
+		and cx, CHECK_MATRIX_ROW_3    // Perform the binary matrix multiplication with the third row
+		popcnt cx, cx           // Calculate hamming weight
+		and cx, 1               // Update register to a bit value whether the amount of set bits is even
+		or ax, cx               // Move the result into the return register
+		shl ax, 1               // Shift return value by one and start calculation of next value
+
+		mov cx, in              // Move input variable into cx (16-bit) register
+		and cx, CHECK_MATRIX_ROW_4    // Perform the binary matrix multiplication with the fourth row
+		popcnt cx, cx           // Calculate hamming weight
+		and cx, 1               // Update register to a bit value whether the amount of set bits is even
+		or ax, cx               // Move the result into the return register
+	}
 }
